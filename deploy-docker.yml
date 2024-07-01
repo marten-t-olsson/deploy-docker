@@ -1,0 +1,45 @@
+---
+- name: Install docker
+  hosts: localhost
+  tasks:
+
+    - name: Install ca-certficiates, curl
+      become: true
+      apt:
+        name:
+          - ca-certificates
+          - curl
+        state: present
+
+    - name: Install docker keyring
+      become: true
+      get_url:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        dest: /etc/apt/keyrings/docker.asc
+        mode: 0755
+
+    - name: Add specified repository into sources list
+      become: true
+      apt_repository:
+        repo: deb [arch=arm64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu   noble stable
+        state: present
+
+    - name: Run apt udpate
+      become: true
+      apt:
+        update_cache: true
+
+    - name: Install docker packages
+      become: true
+      apt:
+        name:
+          - docker-ce 
+          - docker-ce-cli 
+          - containerd.io 
+          - docker-buildx-plugin 
+          - docker-compose-plugin
+        state: present
+
+    - name: Verify funtionality
+      debug:
+        msg: Verify docker
