@@ -1,0 +1,5 @@
+---
+- name: Run deployment tasks
+  hosts: localhost
+  tasks:
+    - include_tasks: deploy-docker.yml
